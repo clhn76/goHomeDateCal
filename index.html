@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>말차 출발일 계산기</title>
+        <style>
+                        * {
+                padding: 0;
+                margin: 0;
+                box-sizing: border-box;
+            }
+            .wrapper {
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* 공통 */
+            header h1,
+            .wrapper section {
+                width: 90vw;
+                background-color: rgb(211, 211, 211);
+                margin: 0.3rem auto;
+                padding: 0.5rem;
+                border-radius: 1rem;
+            }
+            /* header */
+            header h1 {
+                text-align: center;
+                font-size: 1.8rem;
+                font-weight: 500;
+            }
+            /* section */
+
+            section label {
+                display: block;
+            }
+
+            section h2 {
+                font-size: 1.5rem;
+                font-weight: 400;
+                border-bottom: 1px dashed gray;
+                padding-bottom: 0.3rem;
+            }
+
+            input[type="button"] {
+                font-size: 1.1rem;
+                height: 2rem;
+                background-color: rgb(248, 223, 0);
+                border-radius: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <section class="wrapper">
+            <header>
+                <h1>말차 출발 계산기</h1>
+            </header>
+            <section>
+                <label>
+                    <h2>전역일</h2>
+                    <input type="date" name="" onchange="getFreeDate(this)"
+                /></label>
+            </section>
+            <section>
+                <h2>총 휴가</h2>
+                <label>
+                    연가:
+                    <input type="number" name="" id="" value="24" min="0"/>
+                </label>
+                <label>
+                    포상:
+                    <input type="number" name="" id="" value="16" min="0"/>
+                </label>
+                <label>
+                    보상:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+                <label>
+                    코로나:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+                <label>
+                    공든탑:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+                <label>
+                    분대장:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+            </section>
+            <section>
+                <h2>쓴 휴가</h2>
+                <label>
+                    사용한 휴가:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+                <label>
+                    pcr공가:
+                    <input type="number" name="" id="" value="0" min="0"/>
+                </label>
+                <input
+                    id="resultBtn"
+                    type="button"
+                    value="말차 출발일 계산!"
+                    onclick="calGoDate()"
+                />
+            </section>
+            <section>
+                <h3>말차 출발일</h2>
+                <div id="result"></div>
+            </section>
+        </section>
+        <script>
+        let freeDate;
+        let numArr = [];
+        let totalVac = 0;
+        let goDateStr = "";
+        function getFreeDate(obj) {
+            freeDate = obj.value;
+            console.log(freeDate);
+        }
+        function calGoDate() {
+            numArr = [];
+            totalVac = 0;
+            const list = document.querySelectorAll("input[type='number']");
+            for (const obj of list) {
+                numArr.push(parseInt(obj.value));
+            }
+            console.log(numArr);
+
+            //numArr 0~5 -> 다 더하기 6- 빼기 7- 더하기 = 남은 휴가일수
+
+            for (const i in numArr) {
+                console.log(i);
+                if (i != 6) {
+                    totalVac += numArr[i];
+                } else {
+                    totalVac -= numArr[i];
+                }
+            }
+            console.log(totalVac);
+
+            const fDate = new Date(freeDate);
+            totalVac -= 1;
+            console.log(fDate);
+            const goDate = new Date(fDate.getTime() - 1000 * 60 * 60 * 24 * totalVac);
+            console.log(goDate);
+            goDateStr = `${goDate.getFullYear()}-${
+                goDate.getMonth() + 1
+            }-${goDate.getDate()}`;
+            console.log(goDateStr);
+
+            if (fDate != "Invalid Date") {
+                const result = document.getElementById("result");
+                result.prepend(goDateStr);
+            }
+        }
+        </script>
+    </body>
+</html>
